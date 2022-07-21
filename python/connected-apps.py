@@ -9,12 +9,12 @@ load_dotenv("./.env")
 env_dict = dict(os.environ)
 # dictionary with required environment variables
 env_vars = [
+  "TABLEAU_SERVER",
+  "TABLEAU_SITENAME",
   "TABLEAU_USERNAME",
   "TABLEAU_CA_CLIENT",
   "TABLEAU_CA_SECRET_ID",
-  "TABLEAU_CA_SECRET_VALUE", 
-  "TABLEAU_SITENAME", 
-  "TABLEAU_SERVER",
+  "TABLEAU_CA_SECRET_VALUE"
 ]
 
 # check that each environment variable is available, else throw an exception
