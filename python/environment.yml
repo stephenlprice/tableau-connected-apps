@@ -1,0 +1,9 @@
+name: tableau-connected-apps
+channels:
+  - defaults
+dependencies:
+  - python=3.8.8
+  - pip=21.2.4
+  - pip:
+    - python-dotenv==0.19.2
+    - pyjwt[crypto]==2.4.0
