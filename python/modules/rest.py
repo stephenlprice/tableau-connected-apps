@@ -2,7 +2,6 @@ import requests
 import json
 from utils import exceptions, log
 
-
 credentials = {
   "server": "",
   "api_version": "",
@@ -15,7 +14,6 @@ paths = {
   "new": "",
   "site": "",
 }
-
 
 # authentication into tableau's REST API with a valid JWT
 def auth(env_dict, jwt):
