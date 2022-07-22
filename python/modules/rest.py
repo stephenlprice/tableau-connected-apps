@@ -1,43 +1,67 @@
 import requests
 from utils import exceptions, log
 
-# authentication into tableau's REST API
-base_path = f'{env_var["TABLEAU_SERVER"]}/api'
 
-auth_url = f'{base_path}/3.16/auth/signin'
-
-auth_payload = """
-<tsRequest>
-  <credentials jwt="{0}">
-    <site contentUrl="{1}"/>
-  </credentials>
-</tsRequest>
-"""
-
-auth_headers = {
-  'Content-Type': 'application/xml',
-  'Accept': 'application/json'
+credentials = {
+  "server": "",
+  "api_version": "",
+  "site_id": "",
+  "api_key": ""
 }
 
-response = requests.request("POST", auth_url, headers=auth_headers, data=auth_payload.format(token, env_var["TABLEAU_SITENAME"]))
-
-response_body = response.json()
-print(response_body)
-
-# obtain dict values from response
-site_id = response_body["credentials"]["site"]["id"]
-api_key = response_body["credentials"]["token"]
-print(site_id)
-
-# get a list of views for a site
-views_url = f'{base_path}/exp/sites/{site_id}/views'
-
-payload={}
-headers = {
-  'Accept': 'application/json',
-  'X-Tableau-Auth': api_key
+paths = {
+  "classic": f'{credentials["server"]}/api/{credentials["api_version"]}/',
+  "new": f'{credentials["server"]}/api/*/',
+  "site": f'sites/{credentials["site_id"]}/',
 }
 
-response = requests.request("GET", views_url, headers=headers, data=payload)
+# authentication into tableau's REST API with a valid JWT
+def auth(env_vars, jwt):
 
-print(response.text)
+  credentials['server'] = env_vars['TABLEAU_SERVER']
+  credentials['api_version'] = env_vars['TABLEAU_RESTAPI_VERSION']
+
+  auth_url = f'{paths["classic"]}/auth/signin'
+
+  auth_payload = """
+  <tsRequest>
+    <credentials jwt="{0}">
+      <site contentUrl="{1}"/>
+    </credentials>
+  </tsRequest>
+  """
+
+  auth_headers = {
+    'Content-Type': 'application/xml',
+    'Accept': 'application/json'
+  }
+
+  response = requests.request("POST", auth_url, headers=auth_headers, data=auth_payload.format(jwt, env_vars["TABLEAU_SITENAME"]))
+
+  response_body = response.json()
+  print(response_body)
+
+  # obtain dict values from response
+  credentials["site_id"] = response_body["credentials"]["site"]["id"]
+  credentials["api_key"] = response_body["credentials"]["token"]
+
+  print(credentials)
+
+
+
+def get_workbooks_site(api_key):
+  # get a list of views for a site
+  query_parameters = f'pageSize=5-size&fields=_all_'
+
+  views_url = f'{paths["classic"]}{paths["site"]}workbooks?{query_parameters}'
+
+  payload={}
+  headers = {
+    'Accept': 'application/json',
+    'X-Tableau-Auth': api_key
+  }
+
+  response = requests.request("GET", views_url, headers=headers, data=payload)
+
+  response_body = response.json()
+  print(response_body)
