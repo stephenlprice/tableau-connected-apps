@@ -1,5 +1,6 @@
 import datetime, uuid
 import jwt
+from utils import exceptions, log
 
 
 def encode(env_vars):
@@ -22,14 +23,20 @@ def encode(env_vars):
   connected_app_secret = env_vars["TABLEAU_CA_SECRET_VALUE"]
 
   # encode the JWT with declared payload, secret and headers
-  token = jwt.encode(
-    payload = payload_data,
-    key = connected_app_secret,
-    headers = header_data
-  )
-  print(f'encoded token: {token}')
-
-  decode(token, connected_app_secret, payload_data["aud"], header_data["alg"])
+  try:
+    token = jwt.encode(
+      payload = payload_data,
+      key = connected_app_secret,
+      headers = header_data
+    )
+  
+  except Exception as error:
+    raise exceptions.JWTEncodingError(error)
+  
+  else:
+    log.logger.info(f"token created: {token}")
+    print(f"token created: {token}")
+    decode(token, connected_app_secret, payload_data["aud"], header_data["alg"])
 
 
 # decode the JWT for testing purposes
@@ -40,7 +47,7 @@ def decode(token, connected_app_secret, audience, algorithms):
     audience = audience, 
     algorithms = algorithms
   )
+  log.logger.info(f'decoded token: {decodedToken}')
   print(f'decoded token: {decodedToken}')
-
 
 
