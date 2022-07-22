@@ -1,17 +1,9 @@
-import os, datetime, uuid, logging
+import os, datetime, uuid
 from dotenv import load_dotenv
 import jwt
 import requests
+from utils import exceptions, log
 
-# instantiate a logger object
-logging.basicConfig(
-  format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-  datefmt='%Y-%m-%d:%H:%M:%S',
-  level=logging.DEBUG,
-  filename='connected-apps.log',
-)    
-# logger object named after module: https://docs.python.org/3/howto/logging.html#advanced-logging-tutorial
-logger = logging.getLogger(__name__)
 
 # load environment files from .env
 load_dotenv("./.env")
@@ -27,18 +19,21 @@ env_vars = [
   "TABLEAU_CA_SECRET_VALUE"
 ]
 
-print('env_vars', env_vars)
-
-
-# check that each environment variable is available, else throw an exception
+# check that each environment variable has been declared and assigned
 for vars in env_vars:
   try:
     # check the local dictionary pulled from os.environ
     env_dict[vars]
+
+    # check that key value length is non-zero
+    if len(env_dict[vars]) == 0:
+      log.logger.critical(f"Environment variable value for key {vars} was not assigned.")
+      raise exceptions.EnvironmentError(vars)
+
   except KeyError:
-    # output the first environment variable to fail and shut the server down
-    logger.critical(f"Environment variable {vars} was not found, server shutting down...")
-    raise RuntimeError(f"Environment variable {vars} was not found, server shutting down...")
+    # raises error if an environment variable has not been declared
+    log.logger.critical(f"Environment variable {vars} was not declared.")
+    raise RuntimeError(f"Environment variable {vars} was not declared.")
 
 # tableau connected app variables (JWT) see: https://help.tableau.com/current/online/en-us/connected_apps.htm#step-3-configure-the-jwt
 header_data = {
