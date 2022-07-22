@@ -11,5 +11,6 @@ class EnvironmentError(Error):
 
   def __init__(self, environment_variable):
     self.environment_variable = environment_variable
-    self.message = f"Environment variable {environment_variable} was not set."
+    self.message = f"Environment variable value for key {environment_variable} was not assigned."
     super().__init__(self.message)
+    
