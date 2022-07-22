@@ -1,4 +1,5 @@
 import requests
+import json
 from utils import exceptions, log
 from modules import connected_apps
 
@@ -59,7 +60,7 @@ def auth(env_dict, jwt):
 
   response_body = response.json()
 
-  print('response body: ', response_body)
+  print('/auth response body: ', json.dumps(response_body, indent=4, sort_keys=True))
 
   # obtain dict values from response
   credentials["site_id"] = response_body["credentials"]["site"]["id"]
@@ -71,7 +72,7 @@ def auth(env_dict, jwt):
 
 def get_workbooks_site(api_key):
   # get a list of views for a site
-  query_parameters = f'pageSize=5&fields=_all_'
+  query_parameters = f'pageSize=1&fields=_all_'
 
   workbooks_url = f'{paths["classic"]}/{paths["site"]}workbooks?{query_parameters}'
 
@@ -86,4 +87,5 @@ def get_workbooks_site(api_key):
   response = requests.request("GET", workbooks_url, headers=headers, data=payload)
 
   response_body = response.json()
-  print(response_body)
+
+  print('/workbooks response body: ', json.dumps(response_body, indent=4, sort_keys=True))
