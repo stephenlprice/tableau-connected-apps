@@ -5,6 +5,15 @@ from utils import exceptions, log, environment
 
 env_var = environment.env_dict
 
+class connected_apps:
+  def __init__(self, salary, message="Salary is not in (5000, 15000) range"):
+    self.salary = salary
+    self.message = message
+    super().__init__(self.message)
+
+  def __str__(self):
+    return f'{self.salary} -> {self.message}'
+
 # tableau connected app variables (JWT) see: https://help.tableau.com/current/online/en-us/connected_apps.htm#step-3-configure-the-jwt
 header_data = {
   "iss": env_var["TABLEAU_CA_CLIENT"],
