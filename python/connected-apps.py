@@ -1,57 +1,27 @@
-import os, datetime, uuid
-from dotenv import load_dotenv
+import datetime, uuid
 import jwt
 import requests
-from utils import exceptions, log
+from utils import exceptions, log, environment
 
-
-# load environment files from .env
-load_dotenv("./.env")
-# calling environ is expensive, this saves environment variables to a dictionary
-env_dict = dict(os.environ)
-# dictionary with required environment variables
-env_vars = [
-  "TABLEAU_SERVER",
-  "TABLEAU_SITENAME",
-  "TABLEAU_USERNAME",
-  "TABLEAU_CA_CLIENT",
-  "TABLEAU_CA_SECRET_ID",
-  "TABLEAU_CA_SECRET_VALUE"
-]
-
-# check that each environment variable has been declared and assigned
-for vars in env_vars:
-  try:
-    # check the local dictionary pulled from os.environ
-    env_dict[vars]
-
-    # check that key value length is non-zero
-    if len(env_dict[vars]) == 0:
-      log.logger.critical(f"Environment variable value for key {vars} was not assigned.")
-      raise exceptions.EnvironmentError(vars)
-
-  except KeyError:
-    # raises error if an environment variable has not been declared
-    log.logger.critical(f"Environment variable {vars} was not declared.")
-    raise RuntimeError(f"Environment variable {vars} was not declared.")
+env_var = environment.env_dict
 
 # tableau connected app variables (JWT) see: https://help.tableau.com/current/online/en-us/connected_apps.htm#step-3-configure-the-jwt
 header_data = {
-  "iss": env_dict["TABLEAU_CA_CLIENT"],
-  "kid": env_dict["TABLEAU_CA_SECRET_ID"],
+  "iss": env_var["TABLEAU_CA_CLIENT"],
+  "kid": env_var["TABLEAU_CA_SECRET_ID"],
   "alg": "HS256",
 }
 
 payload_data = {
-  "iss": env_dict["TABLEAU_CA_CLIENT"],
-  "sub": env_dict["TABLEAU_USERNAME"],
+  "iss": env_var["TABLEAU_CA_CLIENT"],
+  "sub": env_var["TABLEAU_USERNAME"],
   "aud": "tableau",
   "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=5),
   "jti": str(uuid.uuid4()),
   "scp": ["tableau:content:read", "tableau:workbooks:create"]
 }
 
-connected_app_secret = env_dict["TABLEAU_CA_SECRET_VALUE"]
+connected_app_secret = env_var["TABLEAU_CA_SECRET_VALUE"]
 
 # encode the JWT with declared payload, secret and headers
 token = jwt.encode(
@@ -72,7 +42,7 @@ print(f'decoded token: {decodedToken}')
 
 
 # authentication into tableau's REST API
-base_path = f'{env_dict["TABLEAU_SERVER"]}/api'
+base_path = f'{env_var["TABLEAU_SERVER"]}/api'
 
 auth_url = f'{base_path}/3.16/auth/signin'
 
@@ -89,7 +59,7 @@ auth_headers = {
   'Accept': 'application/json'
 }
 
-response = requests.request("POST", auth_url, headers=auth_headers, data=auth_payload.format(token, env_dict["TABLEAU_SITENAME"]))
+response = requests.request("POST", auth_url, headers=auth_headers, data=auth_payload.format(token, env_var["TABLEAU_SITENAME"]))
 
 response_body = response.json()
 print(response_body)
