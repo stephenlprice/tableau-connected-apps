@@ -16,6 +16,7 @@ paths = {
   "site": "",
 }
 
+
 # authentication into tableau's REST API with a valid JWT
 def auth(env_dict, jwt):
 
@@ -45,24 +46,29 @@ def auth(env_dict, jwt):
   }
   print(jwt)
   print(auth_payload.format(jwt, env_dict["TABLEAU_SITENAME"]))
-  
 
-  response = requests.request("POST", auth_url, headers=auth_headers, data=auth_payload.format(jwt, env_dict["TABLEAU_SITENAME"]))
+  try:
+    response = requests.request("POST", auth_url, headers=auth_headers, data=auth_payload.format(jwt, env_dict["TABLEAU_SITENAME"]))
 
-  response_body = response.json()
+  except Exception as error:
+    raise exceptions.TableauRestAuthError(error)
 
-  print('/auth response body: ', json.dumps(response_body, indent=4, sort_keys=True))
+  else:
+    response_body = response.json()
+    log.logger.info(f"Successful authentication to Tableau REST API: {json.dumps(response_body, indent=4, sort_keys=True)}")
+    print(f"Successful authentication to Tableau REST API: {json.dumps(response_body, indent=4, sort_keys=True)}")
 
-  # obtain dict values from response
-  credentials["site_id"] = response_body["credentials"]["site"]["id"]
-  credentials["api_key"] = response_body["credentials"]["token"]
-  paths['site'] = f"sites/{credentials['site_id']}/"
+    # obtain dict values from response
+    credentials["site_id"] = response_body["credentials"]["site"]["id"]
+    credentials["api_key"] = response_body["credentials"]["token"]
+    paths['site'] = f"sites/{credentials['site_id']}/"
 
-  return credentials["api_key"]
+    return credentials["api_key"]
 
 
+# get a list of views for a site
 def get_workbooks_site(api_key):
-  # get a list of views for a site
+  
   query_parameters = f'pageSize=1&fields=_all_'
 
   workbooks_url = f'{paths["classic"]}/{paths["site"]}workbooks?{query_parameters}'
@@ -75,8 +81,13 @@ def get_workbooks_site(api_key):
     'X-Tableau-Auth': api_key
   }
 
-  response = requests.request("GET", workbooks_url, headers=headers, data=payload)
+  try:
+    response = requests.request("GET", workbooks_url, headers=headers, data=payload)
 
-  response_body = response.json()
-
-  print('/workbooks response body: ', json.dumps(response_body, indent=4, sort_keys=True))
+  except Exception as error:
+    raise exceptions.TableauRestError(error)
+  
+  else:
+    response_body = response.json()
+    log.logger.info(f"Successful request to Tableau REST API: {json.dumps(response_body, indent=4, sort_keys=True)}")
+    print(f"Successful request to Tableau REST API: {json.dumps(response_body, indent=4, sort_keys=True)}")
