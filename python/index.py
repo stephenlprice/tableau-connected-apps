@@ -22,4 +22,5 @@ env_dict = dict(os.environ)
 environment.validate(env_dict, env_vars)
 
 # encode a JWT token for connected apps authentication: https://help.tableau.com/current/online/en-us/connected_apps.htm#step-4-embedding-next-steps
-connected_apps.encode(env_dict)
+token = connected_apps.encode(env_dict)
+
