@@ -21,12 +21,24 @@ class JWTEncodingError(Error):
   Exception raised when encoding fails
 
   Attributes:
-    key_attribute -- environment variable
-    key_attribute -- environment variable
+    key_attribute -- error
   """
 
   def __init__(self, error):
     self.message = f"Cannot encode JWT: {error}"
     self.log = log.logger.error(f"cannot encode JWT, {error}")
     super().__init__(self.message)
+
+class JWTDecodingError(Error):
+    """
+    Exception raised when decoding fails
+
+    Attributes:
+      key_attribute -- error
+    """
+
+    def __init__(self, error):
+      self.message = f"Cannot decode JWT: {error}"
+      self.log = log.logger.error(f"cannot decode JWT, {error}")
+      super().__init__(self.message)
     
