@@ -1,7 +1,6 @@
 import requests
 import json
 from utils import exceptions, log
-from modules import connected_apps
 
 
 credentials = {
@@ -36,14 +35,6 @@ def auth(env_dict, jwt):
   <tsRequest>
     <credentials jwt="{0}">
       <site contentUrl="{1}"/>
-    </credentials>
-  </tsRequest>
-  """
-
-  """
-  <tsRequest>
-    <credentials jwt="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImlzcyI6IjZhOGEyZTg0LWNkODktNGJmMi1hMzA0LWIwZmIwNjk1ZjUxYiIsImtpZCI6ImM1ZDI5M2U0LTJhMTMtNDAwMy05MTE3LWZhYjBjMTdmZDhmZSJ9.eyJpc3MiOiI2YThhMmU4NC1jZDg5LTRiZjItYTMwNC1iMGZiMDY5NWY1MWIiLCJzdWIiOiJzLnByaWNlQHNhbGVzZm9yY2UuY29tIiwiYXVkIjoidGFibGVhdSIsImV4cCI6MTY1ODQ3NDExMiwianRpIjoiYTcwOWU3N2YtMWMxYS00OTkxLWIwZTItODgwZmY3ZjAwOGJlIiwic2NwIjpbInRhYmxlYXU6Y29udGVudDpyZWFkIiwidGFibGVhdTp3b3JrYm9va3M6Y3JlYXRlIl19.c654sXbEYRbi0BdRTUDlF70ZhDJalNZs_y0ScMOe1eU">
-      <site contentUrl="tc22broadcast"/>
     </credentials>
   </tsRequest>
   """
