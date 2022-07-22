@@ -22,10 +22,10 @@ env_dict = dict(os.environ)
 environment.validate(env_dict, env_vars)
 
 # encode a JWT token for connected apps authentication: https://help.tableau.com/current/online/en-us/connected_apps.htm#step-4-embedding-next-steps
-token = connected_apps.encode(env_dict)
+jwt = connected_apps.encode(env_dict)
 
 # authenticate to Tableau's REST API
-api_key = rest.auth(env_dict)
+api_key = rest.auth(env_dict, jwt)
 
 # get a list of workbooks on the site
 workbooks = rest.get_workbooks_site(api_key)
