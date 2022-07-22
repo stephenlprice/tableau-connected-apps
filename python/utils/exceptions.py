@@ -3,6 +3,7 @@ from utils import log
 class Error(Exception):
   """base class for errors"""
 
+
 class EnvironmentError(Error):
   """
   Exception raised when environment variables are empty or not strings
@@ -15,7 +16,8 @@ class EnvironmentError(Error):
     self.environment_variable = environment_variable
     self.message = f"Environment variable value for key {environment_variable} was not assigned."
     super().__init__(self.message)
-    
+
+
 class JWTEncodingError(Error):
   """
   Exception raised when encoding fails
@@ -26,19 +28,48 @@ class JWTEncodingError(Error):
 
   def __init__(self, error):
     self.message = f"Cannot encode JWT: {error}"
-    self.log = log.logger.error(f"cannot encode JWT, {error}")
+    self.log = log.logger.error(f"Cannot encode JWT, {error}")
     super().__init__(self.message)
 
+
 class JWTDecodingError(Error):
-    """
-    Exception raised when decoding fails
+  """
+  Exception raised when decoding fails
 
-    Attributes:
-      key_attribute -- error
-    """
+  Attributes:
+    key_attribute -- error
+  """
 
-    def __init__(self, error):
-      self.message = f"Cannot decode JWT: {error}"
-      self.log = log.logger.error(f"cannot decode JWT, {error}")
-      super().__init__(self.message)
+  def __init__(self, error):
+    self.message = f"Cannot decode JWT: {error}"
+    self.log = log.logger.error(f"Cannot decode JWT, {error}")
+    super().__init__(self.message)
+
+
+class TableauRestAuthError(Error):
+  """
+  Exception raised when authentication to Tableau's REST API fails
+
+  Attributes:
+    key_attribute -- error
+  """
+
+  def __init__(self, error):
+    self.message = f"Authentication to Tableau REST API failed: {error}"
+    self.log = log.logger.error(f"Authentication to Tableau REST API failed, {error}")
+    super().__init__(self.message)
+
+
+class TableauRestError(Error):
+  """
+  Exception raised when requests to Tableau's REST API fail
+
+  Attributes:
+    key_attribute -- error
+  """
+
+  def __init__(self, error):
+    self.message = f"Request to Tableau REST API failed: {error}"
+    self.log = log.logger.error(f"Request to Tableau REST API failed, {error}")
+    super().__init__(self.message)
     
