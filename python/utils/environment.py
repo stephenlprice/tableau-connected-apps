@@ -1,16 +1,7 @@
 from utils import exceptions, log
 
-# dictionary with required environment variables
-env_vars = [
-  "TABLEAU_SERVER",
-  "TABLEAU_SITENAME",
-  "TABLEAU_USERNAME",
-  "TABLEAU_CA_CLIENT",
-  "TABLEAU_CA_SECRET_ID",
-  "TABLEAU_CA_SECRET_VALUE"
-]
 
-def validate(env_dict):
+def validate(env_dict, env_vars):
   # check that each environment variable has been declared and assigned
   for vars in env_vars:
     try:
