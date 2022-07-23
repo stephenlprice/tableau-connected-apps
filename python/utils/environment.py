@@ -1,4 +1,4 @@
-from utils import exceptions, log
+from utils import exceptions
 
 
 def validate(env_dict, env_vars):
@@ -10,10 +10,8 @@ def validate(env_dict, env_vars):
 
       # check that key value length is non-zero
       if len(env_dict[vars]) == 0:
-        log.logger.critical(f"Environment variable value for key {vars} was not assigned.")
-        raise exceptions.EnvironmentError(vars)
+        raise exceptions.EnvironmentAttributeError(vars)
 
-    except KeyError:
+    except KeyError as error:
       # raises error if an environment variable has not been declared
-      log.logger.critical(f"Environment variable {vars} was not declared.")
-      raise RuntimeError(f"Environment variable {vars} was not declared.")
+      raise exceptions.EnvironmentKeyError(vars, error)
