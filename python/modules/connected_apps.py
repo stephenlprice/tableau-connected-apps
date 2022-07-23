@@ -1,9 +1,9 @@
 import datetime, uuid
 import jwt
-import requests
 from utils import exceptions, log
 
 
+# encode the JWT with declared payload, secret and headers
 def encode(env_vars):
   # tableau connected app variables (JWT) see: https://help.tableau.com/current/online/en-us/connected_apps.htm#step-3-configure-the-jwt
   header_data = {
@@ -23,61 +23,37 @@ def encode(env_vars):
 
   connected_app_secret = env_vars["TABLEAU_CA_SECRET_VALUE"]
 
-  # encode the JWT with declared payload, secret and headers
-  token = jwt.encode(
-    payload = payload_data,
-    key = connected_app_secret,
-    headers = header_data
-  )
-  print(f'encoded token: {token}')
+  try:
+    token = jwt.encode(
+      payload = payload_data,
+      key = connected_app_secret,
+      headers = header_data
+    )
+  
+  except Exception as error:
+    raise exceptions.JWTEncodingError(error)
+  
+  else:
+    log.logger.info(f"token created: {token}")
+    print(f"token created: {token}")
+    # decode the token for access logging and testing
+    decode(token, connected_app_secret, payload_data["aud"], header_data["alg"])
+    return token
 
-  # decode the JWT for testing purposes
-  decodedToken = jwt.decode(
-    jwt = token, 
-    key = connected_app_secret,
-    audience = payload_data["aud"], 
-    algorithms = header_data["alg"]
-  )
-  print(f'decoded token: {decodedToken}')
 
-# authentication into tableau's REST API
-# base_path = f'{env_var["TABLEAU_SERVER"]}/api'
+# decode the JWT for testing purposes
+def decode(token, connected_app_secret, audience, algorithms):
+  try:
+    decodedToken = jwt.decode(
+      jwt = token, 
+      key = connected_app_secret,
+      audience = audience, 
+      algorithms = algorithms
+    )
+  
+  except Exception as error:
+    raise exceptions.JWTDecodingError(error)
 
-# auth_url = f'{base_path}/3.16/auth/signin'
-
-# auth_payload = """
-# <tsRequest>
-#   <credentials jwt="{0}">
-#     <site contentUrl="{1}"/>
-#   </credentials>
-# </tsRequest>
-# """
-
-# auth_headers = {
-#   'Content-Type': 'application/xml',
-#   'Accept': 'application/json'
-# }
-
-# response = requests.request("POST", auth_url, headers=auth_headers, data=auth_payload.format(token, env_var["TABLEAU_SITENAME"]))
-
-# response_body = response.json()
-# print(response_body)
-
-# # obtain dict values from response
-# site_id = response_body["credentials"]["site"]["id"]
-# api_key = response_body["credentials"]["token"]
-# print(site_id)
-
-# # get a list of views for a site
-# views_url = f'{base_path}/exp/sites/{site_id}/views'
-
-# payload={}
-# headers = {
-#   'Accept': 'application/json',
-#   'X-Tableau-Auth': api_key
-# }
-
-# response = requests.request("GET", views_url, headers=headers, data=payload)
-
-# print(response.text)
-
+  else:
+    log.logger.info(f'decoded token: {decodedToken}')
+    print(f'decoded token: {decodedToken}')

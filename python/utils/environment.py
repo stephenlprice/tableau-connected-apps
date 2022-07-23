@@ -1,16 +1,7 @@
-from utils import exceptions, log
+from utils import exceptions
 
-# dictionary with required environment variables
-env_vars = [
-  "TABLEAU_SERVER",
-  "TABLEAU_SITENAME",
-  "TABLEAU_USERNAME",
-  "TABLEAU_CA_CLIENT",
-  "TABLEAU_CA_SECRET_ID",
-  "TABLEAU_CA_SECRET_VALUE"
-]
 
-def validate(env_dict):
+def validate(env_dict, env_vars):
   # check that each environment variable has been declared and assigned
   for vars in env_vars:
     try:
@@ -19,10 +10,8 @@ def validate(env_dict):
 
       # check that key value length is non-zero
       if len(env_dict[vars]) == 0:
-        log.logger.critical(f"Environment variable value for key {vars} was not assigned.")
-        raise exceptions.EnvironmentError(vars)
+        raise exceptions.EnvironmentAttributeError(vars)
 
-    except KeyError:
+    except KeyError as error:
       # raises error if an environment variable has not been declared
-      log.logger.critical(f"Environment variable {vars} was not declared.")
-      raise RuntimeError(f"Environment variable {vars} was not declared.")
+      raise exceptions.EnvironmentKeyError(vars, error)
