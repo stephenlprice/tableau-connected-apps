@@ -4,9 +4,9 @@ class Error(Exception):
   """base class for errors"""
 
 
-class EnvironmentError(Error):
+class EnvironmentAttributeError(Error):
   """
-  Exception raised when environment variables are empty or not strings
+  Exception raised when environment variables are empty strings
 
   Attributes:
     key_attribute -- environment variable
@@ -15,6 +15,22 @@ class EnvironmentError(Error):
   def __init__(self, environment_variable):
     self.environment_variable = environment_variable
     self.message = f"Environment variable value for key {environment_variable} was not assigned."
+    self.log = log.logger.error(f"Environment variable value for key {environment_variable} was not assigned.")
+    super().__init__(self.message)
+
+
+class EnvironmentKeyError(Error):
+  """
+  Exception raised when the environment variables dict does not have required keys
+
+  Attributes:
+    key_attribute -- environment variable
+  """
+
+  def __init__(self, vars):
+    self.environment_variable = vars
+    self.message = f"Environment variable {vars} was not declared."
+    self.log = log.logger.error(f"Environment variable {vars} was not declared.")
     super().__init__(self.message)
 
 
