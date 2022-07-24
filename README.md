@@ -12,6 +12,7 @@ A collection of [Tableau Connected Apps](https://www.tableau.com/about/blog/2022
   - [Requirements](#requirements)
   - [Installation](#installation)
   - [Dependencies](#dependencies)
+  - [Environment Variables](#environment-variables)
 
 </br>
 
@@ -87,5 +88,25 @@ dependencies:
 ```
 
 It is possible to recreate this environment without Anaconda, using something like [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/). In that case you can install all dependencies with `pip3` and write a `requirements.txt` file to document your dependencies.
+
+</br>
+
+## Environment Variables
+
+To protect private data such as JWT secrets, this project relies on `environment variables` to store this information without pushing them to the public Github repository (via `.gitignore`). If you are new to this concept I highly recommend that you read [Twilio's blog post](https://www.twilio.com/blog/2017/01/how-to-set-environment-variables.html) on the subject.
+
+**tldr**: create a `.env` file using the example-env file provided with the repo. `python-dotenv` will load these variables into `index.py` to be used in the script.
+
+Your `.env` file must contain all of the following variables:
+
+```bash
+TABLEAU_SERVER='tableau-server-or-cloud-domain'
+TABLEAU_SITENAME='tableau-sitename'
+TABLEAU_RESTAPI_VERSION='tableau-rest-api-version'
+TABLEAU_USERNAME='tableau-username'
+TABLEAU_CA_CLIENT='tableau-connected-app-client-id'
+TABLEAU_CA_SECRET_ID='tableau-connected-app-secret-id'
+TABLEAU_CA_SECRET_VALUE='tableau-connected-app-secret-value'
+```
 
 </br>
