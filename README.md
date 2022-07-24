@@ -9,6 +9,7 @@ A collection of [Tableau Connected Apps](https://www.tableau.com/about/blog/2022
 ## Table of Contents
 - [Tableau Connected Apps](#tableau-connected-apps)
   - [Table of Contents](#table-of-contents)
+  - [Connected Apps](#connected-apps)
   - [Requirements](#requirements)
   - [Installation](#installation)
   - [Dependencies](#dependencies)
@@ -16,7 +17,24 @@ A collection of [Tableau Connected Apps](https://www.tableau.com/about/blog/2022
 
 </br>
 
+## Connected Apps
+
+Tableau Connected Apps enable a seamless and secure authentication experience by facilitating an explicit trust relationship between your Tableau environment and custom applications that embed Tableau content or make use of Tableau's REST API. For a detailed explanation and setup instructions, refer to the [official documentation](https://help.tableau.com/current/online/en-us/connected_apps.htm).
+
+The diagram below illustrates how authentication works between custom applications and a Connected App.
+
 ![Tableau Connected Apps Diagram](assets/images/connectedapp_how.png)
+
+1. User visits the webpage
+2. Custom application constructs an authentication token
+3. Custom application responds with authentication token
+4. Webpage requests content from Tableau
+5. Tableau validates the token
+6. Tableau returns the content based on the restricted embedding context
+
+A similar flow takes place when Connected Apps are used to authenticate into Tableau's REST API. In this case, successful authentication will return an API token that must be added to subsequent requests via an `X-Tableau-Auth` header.
+
+</br>
 
 ## Requirements
 
@@ -110,5 +128,3 @@ TABLEAU_CA_SECRET_VALUE='tableau-connected-app-secret-value'
 ```
 
 > ##### *__WARNING__: Do not push usernames, passwords or personal access tokens to Github as they will be accessible by crawlers and is a well known security risk. Use .gitignore to stop unwanted files from being pushed to a git remote*
-
-</br>
