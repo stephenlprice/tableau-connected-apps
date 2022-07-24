@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from utils import exceptions, log, environment
+from utils import log, environment
 from modules import connected_apps, rest
 
 # dictionary with required environment variables
@@ -38,4 +38,4 @@ log.logger.info('SUCCESS: REST API key obtained...')
 # get a list of workbooks on the site
 workbooks = rest.get_workbooks_site(api_key)
 print('SUCCESS: Workbooks queried...')
-log.logger.info('SUCCESS: REST API key obtained...')
+log.logger.info('SUCCESS: Workbooks by site queried...')
