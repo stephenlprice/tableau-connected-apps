@@ -11,6 +11,7 @@ A collection of [Tableau Connected Apps](https://www.tableau.com/about/blog/2022
   - [Table of Contents](#table-of-contents)
   - [Requirements](#requirements)
   - [Installation](#installation)
+  - [Dependencies](#dependencies)
 
 </br>
 
@@ -63,5 +64,28 @@ cd python
 # run the script
 python index.py
 ```
+
+</br>
+
+## Dependencies
+
+This project was built with [Anaconda](https://www.anaconda.com/), therefore the development environment can be cloned from the `environment.yml` file. Most dependencies are installed with `conda` while the last three are installed with `pip3`. 
+
+If you are new to `conda` I recommend keeping the [conda cheatsheet](https://docs.conda.io/projects/conda/en/4.6.0/_downloads/52a95608c49671267e40c689e0bc00ca/conda-cheatsheet.pdf) nearby for reference.
+
+```yaml
+name: tableau-connected-apps
+channels:
+  - defaults
+dependencies:
+  - python=3.8.8
+  - requests=2.28.1
+  - pip=21.2.4
+  - pip:
+    - python-dotenv==0.19.2
+    - pyjwt[crypto]==2.4.0
+```
+
+It is possible to recreate this environment without Anaconda, using something like [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/). In that case you can install all dependencies with `pip3` and write a `requirements.txt` file to document your dependencies.
 
 </br>
