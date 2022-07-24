@@ -53,13 +53,15 @@ conda activate tableau-connected-apps
 # create the .env file
 touch .env
 ```
-> ##### *__NOTE__: the server will raise a `RuntimeError` if these environment variables are not accessible.*
+> ##### *__NOTE__: the script will raise a `RuntimeError` if these environment variables are not declared.*
 </br>
 
-4. Run the app locally with gunicorn
+4. Run the script
 ```bash
-# $(MODULE_NAME) is notifier and $(VARIABLE_NAME) is app (see notifier.py)
-gunicorn notifier:app
+# enter the repo's python folder
+cd python
+# run the script
+python index.py
 ```
 
 </br>
