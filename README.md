@@ -109,4 +109,6 @@ TABLEAU_CA_SECRET_ID='tableau-connected-app-secret-id'
 TABLEAU_CA_SECRET_VALUE='tableau-connected-app-secret-value'
 ```
 
+> ##### *__WARNING__: Do not push usernames, passwords or personal access tokens to Github as they will be accessible by crawlers and is a well known security risk. Use .gitignore to stop unwanted files from being pushed to a git remote*
+
 </br>
