@@ -4,7 +4,7 @@ from pathlib import Path
 from utils import log, environment
 from modules import connected_apps, rest
 
-class TabJWT:
+class Session:
   """
   """
 
@@ -46,6 +46,41 @@ class TabJWT:
     log.logger.info('SUCCESS --> Workbooks:', workbooks)
     return workbooks
 
+class CLI:
+  """
+  """
+
+  def __init__(self):
+    self.current_session
+    self.active_sessions
+    self.parser = argparse.ArgumentParser()
+    self.__init_parser()
+    self.args = self.parser.parse_args()
+
+  def __str__(self):
+    return f""
+
+  # adds positional and optional arguments to the parser
+  def __init_parser(self):
+    self.parser.add_argument("path")
+    self.parser.add_argument("jwt")
+    self.parser.add_argument("-l", "--long", action="store_true")
+
+  # parser = argparse.ArgumentParser()
+
+  # parser.add_argument("path")
+
+  # args = parser.parse_args()
+
+  # target_dir = Path(args.path)
+
+  # if not target_dir.exists():
+  #     print("The target directory doesn't exist")
+  #     raise SystemExit(1)
+
+  # for entry in target_dir.iterdir():
+  #     print(entry.name)
+
 # protects the entry point of the script so that this only runs during local development
 if __name__ == '__main__':
   # load environment files from .env
@@ -62,18 +97,3 @@ if __name__ == '__main__':
   def getLineInfo():
     print(inspect.stack()[1][1],":",inspect.stack()[1][2],":", inspect.stack()[1][3])
 
-# CLI
-parser = argparse.ArgumentParser()
-
-parser.add_argument("path")
-
-args = parser.parse_args()
-
-target_dir = Path(args.path)
-
-if not target_dir.exists():
-    print("The target directory doesn't exist")
-    raise SystemExit(1)
-
-for entry in target_dir.iterdir():
-    print(entry.name)
